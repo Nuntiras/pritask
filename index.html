@@ -822,6 +822,7 @@
     <button class="tab-btn active" onclick="switchView('tasks')">タスク</button>
     <button class="tab-btn" onclick="switchView('calendar')">カレンダー</button>
   </div>
+  <button onclick="resetAllData()" style="margin-left:auto;font-size:11px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:4px 8px;" title="データをリセット">🔄 再読込</button>
 </header>
 
 <div class="app">
@@ -906,15 +907,41 @@
 // ===== Google Sheets Sync =====
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzaAmaSdVjnm4wsTQDO22fZBuojNvgDgjXXRPrHfwDXrNwvW6MAor4DAIKZsAipHbNKgw/exec';
 
+function normalizeTask(t) {
+  // テキストが空のタスクはスキップ
+  if (!t || !t.text || typeof t.text !== 'string' || t.text.trim() === '') return null;
+  // 日付フォーマットを YYYY-MM-DD に統一（Dateオブジェクト文字列などを変換）
+  let date = null;
+  if (t.date) {
+    const d = new Date(t.date);
+    if (!isNaN(d.getTime())) {
+      date = d.toISOString().split('T')[0];
+    }
+  }
+  return {
+    id: t.id || (Date.now().toString() + Math.random()),
+    text: t.text.trim(),
+    catId: t.catId || detectCategory(t.text),
+    done: !!t.done,
+    date: date,
+    parentId: t.parentId || null,
+    createdAt: t.createdAt || new Date().toISOString(),
+    researchResult: t.researchResult || null,
+  };
+}
+
 async function loadFromSheets() {
   try {
     const res = await fetch(GAS_URL + '?action=load', { mode: 'cors' });
     const data = await res.json();
-    if (data.tasks) {
-      tasks = data.tasks;
-      localStorage.setItem('pritask_tasks', JSON.stringify(tasks));
-      renderAll();
-      showSyncStatus('同期完了 ✓', '#10B981');
+    if (data.tasks && Array.isArray(data.tasks)) {
+      const normalized = data.tasks.map(normalizeTask).filter(Boolean);
+      if (normalized.length > 0) {
+        tasks = normalized;
+        localStorage.setItem('pritask_tasks', JSON.stringify(normalized));
+        renderAll();
+        showSyncStatus('同期完了 ✓', '#10B981');
+      }
     }
   } catch(e) {
     console.error('load error:', e);
@@ -925,7 +952,9 @@ async function loadFromSheets() {
 async function saveToSheets() {
   try {
     showSyncStatus('保存中…', '#7A7A99');
-    const encoded = encodeURIComponent(JSON.stringify(tasks));
+    // 空テキストのタスクを除外してから保存
+    const cleanTasks = tasks.filter(t => t && t.text && t.text.trim() !== '');
+    const encoded = encodeURIComponent(JSON.stringify(cleanTasks));
     const res = await fetch(GAS_URL + '?action=save&data=' + encoded, { mode: 'cors' });
     const result = await res.json();
     if (result.ok) {
@@ -937,6 +966,14 @@ async function saveToSheets() {
     console.error('save error:', e);
     showSyncStatus('保存失敗（ローカルのみ）', '#EF4444');
   }
+}
+
+function resetAllData() {
+  if (!confirm('ローカルデータをクリアしてGASから再読込しますか？')) return;
+  localStorage.removeItem('pritask_tasks');
+  tasks = [];
+  renderAll();
+  loadFromSheets();
 }
 
 function showSyncStatus(msg, color) {
@@ -954,7 +991,8 @@ const CATEGORIES = [
   { id: 'other',    name: 'その他',    color: '#94A3B8', keywords: [] },
 ];
 
-let tasks = JSON.parse(localStorage.getItem('pritask_tasks') || '[]');
+// localStorageから読み込み、空テキストのタスクは即座に除外
+let tasks = JSON.parse(localStorage.getItem('pritask_tasks') || '[]').filter(t => t && t.text && t.text.trim() !== '');
 let selectedCat = 'all';
 let miniCalDate = new Date();
 let fullCalDate = new Date();
@@ -994,7 +1032,9 @@ function findParentTask(text, catId) {
 }
 
 function saveTasks() {
-  localStorage.setItem('pritask_tasks', JSON.stringify(tasks));
+  const cleanTasks = tasks.filter(t => t && t.text && t.text.trim() !== '');
+  tasks = cleanTasks;
+  localStorage.setItem('pritask_tasks', JSON.stringify(cleanTasks));
   saveToSheets();
 }
 
@@ -1008,13 +1048,14 @@ function addTask() {
   const parent = findParentTask(text, catId);
 
   const task = {
-    id: Date.now().toString(),
+    id: Date.now().toString() + Math.random().toString(36).slice(2),
     text,
     catId,
     done: false,
     date: dateInput.value || null,
     parentId: parent ? parent.id : null,
     createdAt: new Date().toISOString(),
+    researchResult: null,
   };
 
   tasks.push(task);
@@ -1467,10 +1508,10 @@ function escHtml(s) {
 // Set today as default date
 document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
 
-// Load from Sheets on startup
-loadFromSheets();
+// ローカルのタスクを正規化して読み込む
+tasks = tasks.map(normalizeTask).filter(Boolean);
 
-// Init with sample tasks
+// サンプルタスク（初回のみ）
 if (tasks.length === 0) {
   const samples = [
     { text: 'ローテーブルを調査する', date: null },
@@ -1480,12 +1521,15 @@ if (tasks.length === 0) {
   for (const s of samples) {
     const catId = detectCategory(s.text);
     const parent = findParentTask(s.text, catId);
-    tasks.push({ id: Date.now().toString() + Math.random(), text: s.text, catId, done: false, date: s.date, parentId: parent ? parent.id : null, createdAt: new Date().toISOString() });
+    await new Promise(r => setTimeout(r, 2)); // IDの重複防止
+    tasks.push({ id: Date.now().toString() + Math.random().toString(36).slice(2), text: s.text, catId, done: false, date: null, parentId: parent ? parent.id : null, createdAt: new Date().toISOString(), researchResult: null });
   }
   saveTasks();
 }
 
+// まずローカルで表示してから、GASと同期
 renderAll();
+loadFromSheets();
 </script>
 </body>
 </html>
