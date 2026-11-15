@@ -1541,7 +1541,6 @@ if (tasks.length === 0) {
   for (const s of samples) {
     const catId = detectCategory(s.text);
     const parent = findParentTask(s.text, catId);
-    await new Promise(r => setTimeout(r, 2)); // IDの重複防止
     tasks.push({ id: Date.now().toString() + Math.random().toString(36).slice(2), text: s.text, catId, done: false, date: null, parentId: parent ? parent.id : null, createdAt: new Date().toISOString(), researchResult: null });
   }
   saveTasks();
