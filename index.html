@@ -1096,7 +1096,7 @@ function renderTasks() {
   let html = '';
 
   for (const [catId, groupTasks] of Object.entries(groups)) {
-    const cat = CATEGORIES.find(c => c.id === catId);
+    const cat = CATEGORIES.find(c => c.id === catId) || { id: 'other', name: 'その他', color: '#94A3B8' };
 
     html += `<div class="task-group">
       <div class="group-header" onclick="toggleGroup(this)">
@@ -1121,9 +1121,9 @@ function renderTasks() {
         <span class="group-dot" style="background:#94A3B8"></span>
         <span class="group-name">完了済み</span>
         <span class="group-count">${doneTasks.length}件</span>
-        <span class="group-toggle">▾</span>
+        <span class="group-toggle collapsed">▾</span>
       </div>
-      <div class="task-list">`;
+      <div class="task-list" style="display:none">`;
     for (const task of doneTasks) {
       html += renderTaskItem(task, []);
     }
@@ -1131,6 +1131,12 @@ function renderTasks() {
   }
 
   container.innerHTML = html;
+}
+
+// 調査キーワード判定（renderTaskItemより前に定義が必要）
+const RESEARCH_KEYWORDS = ['調べる','調査','探す','選ぶ','選定','検討','比較','リサーチ','候補'];
+function isResearchTask(text) {
+  return RESEARCH_KEYWORDS.some(k => text.includes(k));
 }
 
 function renderTaskItem(task, subtasks) {
@@ -1262,13 +1268,6 @@ function switchView(view) {
 }
 
 // ===== 調査機能 =====
-
-// 調査キーワード判定
-const RESEARCH_KEYWORDS = ['調べる','調査','探す','選ぶ','選定','検討','比較','リサーチ','候補'];
-
-function isResearchTask(text) {
-  return RESEARCH_KEYWORDS.some(k => text.includes(k));
-}
 
 // タスクテキストから質問リストを生成
 function generateSurveyQuestions(taskText) {
