@@ -1008,23 +1008,43 @@ function detectCategory(text) {
 }
 
 // ===== Parent task detection =====
+function extractKeywords(text) {
+  // Extract meaningful compound words (2+ char kanji or katakana sequences)
+  const compounds = text.match(/[一-鿿]{2,}|[゠-ヿ]{2,}/g) || [];
+  // Also extract English words (2+ chars)
+  const english = text.match(/[a-zA-Z]{2,}/gi) || [];
+  return [...compounds, ...english];
+}
+
 function findParentTask(text, catId) {
   const catTasks = tasks.filter(t => t.catId === catId && !t.done && !t.parentId);
   if (catTasks.length === 0) return null;
 
-  const textWords = text.replace(/[ぁ-ん]+/g, '').split('');
+  const newKeywords = extractKeywords(text);
+  if (newKeywords.length === 0) return null;
 
   let bestScore = 0;
   let bestTask = null;
 
   for (const task of catTasks) {
-    const taskWords = task.text.replace(/[ぁ-ん]+/g, '').split('');
-    const common = textWords.filter(w => taskWords.includes(w) && w.trim()).length;
-    const score = common / Math.max(textWords.length, taskWords.length, 1);
+    const parentKeywords = extractKeywords(task.text);
+    if (parentKeywords.length === 0) continue;
 
-    if (score > 0.3 && score > bestScore) {
-      bestScore = score;
-      bestTask = task;
+    // Check if the new task contains a significant keyword from the parent
+    const matchedWords = parentKeywords.filter(pk =>
+      pk.length >= 2 && text.includes(pk)
+    );
+
+    // Require at least one meaningful keyword match (not common verbs)
+    const commonVerbs = ['調査','検討','確認','作成','準備','購入','比較','選定'];
+    const meaningfulMatches = matchedWords.filter(w => !commonVerbs.includes(w));
+
+    if (meaningfulMatches.length > 0) {
+      const score = meaningfulMatches.length / parentKeywords.length;
+      if (score > bestScore) {
+        bestScore = score;
+        bestTask = task;
+      }
     }
   }
 
