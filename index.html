@@ -578,6 +578,239 @@
     .sidebar { display: none; }
     .date-input { display: none; }
   }
+
+  /* ===== 調査ボタン ===== */
+  .research-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-family: inherit;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .research-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .research-btn.has-result { border-color: var(--done); color: var(--done); }
+
+  /* ===== 調査モーダル ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .modal-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .modal-close:hover { background: var(--border); }
+
+  .modal-body { padding: 20px 24px; flex: 1; }
+
+  /* アンケートフォーム */
+  .survey-section { margin-bottom: 20px; }
+
+  .survey-q {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .survey-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .survey-chip {
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--text);
+    background: white;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .survey-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .survey-chip.selected { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .survey-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .survey-num {
+    width: 90px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+  }
+  .survey-num:focus { border-color: var(--accent); }
+
+  .survey-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .survey-check-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.12s;
+  }
+  .survey-check-label:hover { border-color: var(--accent); }
+  .survey-check-label input { accent-color: var(--accent); }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .btn-secondary {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .btn-secondary:hover { background: var(--bg); }
+
+  .btn-primary {
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+
+  /* 結果モーダル */
+  .result-doc {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #111;
+    line-height: 1.8;
+  }
+
+  .result-doc h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ddd;
+    color: #111;
+  }
+
+  .result-doc h2:first-child { margin-top: 0; }
+
+  .result-doc p {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .result-doc ul {
+    padding-left: 18px;
+    margin-bottom: 10px;
+  }
+
+  .result-doc li {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .prompt-box {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #222;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    margin-top: 8px;
+    font-family: inherit;
+  }
+
+  .copy-btn {
+    background: #111;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: #333; }
+  .copy-btn.copied { background: var(--done); }
 </style>
 </head>
 <body>
@@ -638,6 +871,35 @@
       </div>
     </div>
   </main>
+</div>
+
+<!-- 調査アンケートモーダル -->
+<div class="modal-overlay" id="survey-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="survey-modal-title">🔍 調査シート</span>
+      <button class="modal-close" onclick="closeSurveyModal()">✕</button>
+    </div>
+    <div class="modal-body" id="survey-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeSurveyModal()">キャンセル</button>
+      <button class="btn-primary" onclick="generatePrompt()">プロンプトを作成</button>
+    </div>
+  </div>
+</div>
+
+<!-- 結果モーダル -->
+<div class="modal-overlay" id="result-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">📋 調査まとめ</span>
+      <button class="modal-close" onclick="closeResultModal()">✕</button>
+    </div>
+    <div class="modal-body" id="result-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeResultModal()">閉じる</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -888,6 +1150,12 @@ function renderTaskItem(task, subtasks) {
     subsHtml += '</div>';
   }
 
+  const isResearch = isResearchTask(task.text);
+  const hasResult = !!task.researchResult;
+  const researchBtn = isResearch
+    ? `<button class="research-btn ${hasResult ? 'has-result' : ''}" title="${hasResult ? '調査まとめを見る' : '調査シートを開く'}" onclick="${hasResult ? `openResultModal('${task.id}')` : `openSurveyModal('${task.id}')`}">${hasResult ? '📋' : '🔍'}</button>`
+    : '';
+
   return `<div class="task-item">
     <div class="task-check ${task.done ? 'checked' : ''}" onclick="toggleTask('${task.id}')"></div>
     <div class="task-body">
@@ -895,6 +1163,7 @@ function renderTaskItem(task, subtasks) {
       <div class="task-meta">${dateLabel}</div>
       ${subsHtml}
     </div>
+    ${researchBtn}
     <button class="task-delete" onclick="deleteTask('${task.id}')">✕</button>
   </div>`;
 }
@@ -992,6 +1261,205 @@ function switchView(view) {
   });
 }
 
+// ===== 調査機能 =====
+
+// 調査キーワード判定
+const RESEARCH_KEYWORDS = ['調べる','調査','探す','選ぶ','選定','検討','比較','リサーチ','候補'];
+
+function isResearchTask(text) {
+  return RESEARCH_KEYWORDS.some(k => text.includes(k));
+}
+
+// タスクテキストから質問リストを生成
+function generateSurveyQuestions(taskText) {
+  const t = taskText;
+
+  // 家具・インテリア系
+  if (t.includes('テーブル') || t.includes('家具') || t.includes('ソファ') || t.includes('椅子') || t.includes('棚') || t.includes('収納')) {
+    return [
+      { type: 'chips', q: '置く部屋は？', options: ['リビング','寝室','子供部屋','ダイニング','書斎'] },
+      { type: 'chips', q: 'サイズ感は？', options: ['コンパクト','普通','大きめ'] },
+      { type: 'range', q: '予算（円）', min: '5000', max: '50000' },
+      { type: 'checks', q: '素材の希望', options: ['木製','金属','ガラス','白系','ナチュラル'] },
+      { type: 'chips', q: '重視すること', options: ['デザイン','価格','機能性','耐久性'] },
+    ];
+  }
+
+  // カーテン系
+  if (t.includes('カーテン') || t.includes('ブラインド')) {
+    return [
+      { type: 'chips', q: '取り付ける部屋は？', options: ['寝室','リビング','子供部屋','書斎'] },
+      { type: 'chips', q: '遮光の必要性は？', options: ['完全遮光','少し遮光','採光優先'] },
+      { type: 'range', q: '予算（円）', min: '3000', max: '30000' },
+      { type: 'checks', q: '色の希望', options: ['ホワイト系','ベージュ系','グレー系','カラー'] },
+    ];
+  }
+
+  // 結婚・式関係
+  if (t.includes('結婚') || t.includes('式') || t.includes('披露宴') || t.includes('顔合わせ')) {
+    return [
+      { type: 'chips', q: '時期はいつ頃？', options: ['3ヶ月以内','半年以内','1年以内','未定'] },
+      { type: 'range', q: '予算感（万円）', min: '10', max: '500' },
+      { type: 'chips', q: '規模は？', options: ['少人数（〜20人）','中規模（〜50人）','大規模（50人〜）'] },
+      { type: 'checks', q: '重視すること', options: ['費用','雰囲気','利便性','料理','写真映え'] },
+    ];
+  }
+
+  // 電化製品
+  if (t.includes('家電') || t.includes('冷蔵庫') || t.includes('洗濯機') || t.includes('テレビ') || t.includes('掃除機')) {
+    return [
+      { type: 'chips', q: '買い替え理由は？', options: ['故障','機能不足','引越し','新規購入'] },
+      { type: 'range', q: '予算（円）', min: '10000', max: '200000' },
+      { type: 'chips', q: '重視すること', options: ['価格','省エネ','機能','デザイン','サイズ'] },
+      { type: 'checks', q: '購入場所の希望', options: ['量販店','ネット','メーカー直販'] },
+    ];
+  }
+
+  // 汎用
+  return [
+    { type: 'chips', q: '優先度は？', options: ['すぐ必要','1ヶ月以内','3ヶ月以内','急ぎではない'] },
+    { type: 'range', q: '予算（円）', min: '0', max: '50000' },
+    { type: 'chips', q: '重視すること', options: ['価格','品質','使いやすさ','デザイン'] },
+    { type: 'checks', q: '調べたいこと', options: ['価格比較','おすすめ商品','注意点','選び方のポイント'] },
+  ];
+}
+
+let currentSurveyTaskId = null;
+
+function openSurveyModal(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  currentSurveyTaskId = taskId;
+
+  document.getElementById('survey-modal-title').textContent = `🔍 ${task.text}`;
+
+  const questions = generateSurveyQuestions(task.text);
+  let html = '';
+
+  questions.forEach((q, i) => {
+    html += `<div class="survey-section">
+      <div class="survey-q">${q.q}</div>`;
+
+    if (q.type === 'chips') {
+      html += `<div class="survey-options">`;
+      q.options.forEach(opt => {
+        html += `<button class="survey-chip" onclick="toggleChip(this)" data-q="${i}">${opt}</button>`;
+      });
+      html += `</div>`;
+    } else if (q.type === 'range') {
+      html += `<div class="survey-range">
+        <input class="survey-num" type="number" data-q="${i}" data-role="min" placeholder="最小" value="${q.min}">
+        <span style="color:var(--text-muted)">〜</span>
+        <input class="survey-num" type="number" data-q="${i}" data-role="max" placeholder="最大" value="${q.max}">
+        <span style="color:var(--text-muted);font-size:12px">円</span>
+      </div>`;
+    } else if (q.type === 'checks') {
+      html += `<div class="survey-checks">`;
+      q.options.forEach(opt => {
+        html += `<label class="survey-check-label">
+          <input type="checkbox" data-q="${i}" value="${opt}"> ${opt}
+        </label>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  document.getElementById('survey-modal-body').innerHTML = html;
+  document.getElementById('survey-modal').classList.add('open');
+}
+
+function toggleChip(btn) {
+  const q = btn.dataset.q;
+  // 同じqのチップを全部外す（単一選択）
+  document.querySelectorAll(`.survey-chip[data-q="${q}"]`).forEach(c => c.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function closeSurveyModal() {
+  document.getElementById('survey-modal').classList.remove('open');
+  currentSurveyTaskId = null;
+}
+
+function generatePrompt() {
+  const task = tasks.find(t => t.id === currentSurveyTaskId);
+  if (!task) return;
+
+  const body = document.getElementById('survey-modal-body');
+  const sections = body.querySelectorAll('.survey-section');
+  const answers = [];
+
+  sections.forEach((sec, i) => {
+    const q = sec.querySelector('.survey-q').textContent;
+    const chips = [...sec.querySelectorAll('.survey-chip.selected')].map(c => c.textContent);
+    const nums = [...sec.querySelectorAll('.survey-num')];
+    const checks = [...sec.querySelectorAll('input[type="checkbox"]:checked')].map(c => c.value);
+
+    if (chips.length > 0) answers.push({ q, a: chips.join('・') });
+    else if (nums.length > 0) {
+      const min = nums[0]?.value;
+      const max = nums[1]?.value;
+      if (min || max) answers.push({ q, a: `${min}〜${max}円` });
+    } else if (checks.length > 0) answers.push({ q, a: checks.join('・') });
+  });
+
+  // まとめドキュメントを生成
+  const answersText = answers.map(a => `・${a.q}　${a.a}`).join('\n');
+  const promptText = `「${task.text}」について調べています。\n\n${answersText}\n\nこの条件でおすすめを教えてください。選び方のポイントや注意点も合わせて教えてください。`;
+
+  const resultHtml = `
+    <div class="result-doc">
+      <h2>入力した条件</h2>
+      <ul>${answers.map(a => `<li><strong>${a.q}</strong>　${a.a}</li>`).join('')}</ul>
+      <h2>Claude へのプロンプト</h2>
+      <p>以下をコピーして <a href="https://claude.ai" target="_blank" style="color:var(--accent)">Claude.ai</a> に貼り付けてください。</p>
+      <div class="prompt-box" id="prompt-text">${escHtml(promptText)}</div>
+      <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">コピーする</button>
+    </div>`;
+
+  // 結果をタスクに保存
+  task.researchResult = { answers, promptText, savedAt: new Date().toISOString() };
+  saveTasks();
+
+  closeSurveyModal();
+
+  document.getElementById('result-modal-body').innerHTML = resultHtml;
+  document.getElementById('result-modal').classList.add('open');
+  renderAll();
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'コピーしました ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'コピーする'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function closeResultModal() {
+  document.getElementById('result-modal').classList.remove('open');
+}
+
+function openResultModal(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task || !task.researchResult) return;
+  const r = task.researchResult;
+  const resultHtml = `
+    <div class="result-doc">
+      <h2>入力した条件</h2>
+      <ul>${r.answers.map(a => `<li><strong>${a.q}</strong>　${a.a}</li>`).join('')}</ul>
+      <h2>Claude へのプロンプト</h2>
+      <p>以下をコピーして <a href="https://claude.ai" target="_blank" style="color:var(--accent)">Claude.ai</a> に貼り付けてください。</p>
+      <div class="prompt-box" id="prompt-text">${escHtml(r.promptText)}</div>
+      <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">コピーする</button>
+    </div>`;
+  document.getElementById('result-modal-body').innerHTML = resultHtml;
+  document.getElementById('result-modal').classList.add('open');
+}
+
 // ===== Utils =====
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -1006,9 +1474,8 @@ loadFromSheets();
 // Init with sample tasks
 if (tasks.length === 0) {
   const samples = [
-    { text: 'カーテンの候補を調べる', date: null },
-    { text: 'カーテンのサイズを採寸する', date: null },
-    { text: '顔合わせのしおりを作る', date: null },
+    { text: 'ローテーブルを調査する', date: null },
+    { text: 'ローテーブルのサイズを測る', date: null },
     { text: '結婚式の動画の構成を考える', date: null },
   ];
   for (const s of samples) {
