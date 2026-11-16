@@ -1023,6 +1023,10 @@ function findParentTask(text, catId) {
   const newKeywords = extractKeywords(text);
   if (newKeywords.length === 0) return null;
 
+  // 汎用語・短すぎる語はサブタスク判定に使わない
+  const stopWords = ['調査','検討','確認','作成','準備','購入','比較','選定','動画','写真',
+                     '資料','情報','内容','方法','場所','時間','予定','計画','記録'];
+
   let bestScore = 0;
   let bestTask = null;
 
@@ -1030,17 +1034,15 @@ function findParentTask(text, catId) {
     const parentKeywords = extractKeywords(task.text);
     if (parentKeywords.length === 0) continue;
 
-    // Check if the new task contains a significant keyword from the parent
-    const matchedWords = parentKeywords.filter(pk =>
-      pk.length >= 2 && text.includes(pk)
-    );
+    // 親キーワードのうち意味のある固有語のみ対象
+    const meaningfulParentKw = parentKeywords.filter(w => w.length >= 3 && !stopWords.includes(w));
+    if (meaningfulParentKw.length === 0) continue;
 
-    // Require at least one meaningful keyword match (not common verbs)
-    const commonVerbs = ['調査','検討','確認','作成','準備','購入','比較','選定'];
-    const meaningfulMatches = matchedWords.filter(w => !commonVerbs.includes(w));
+    // 新タスクに親の固有語が含まれるか（3文字以上の固有名詞レベル）
+    const matchedWords = meaningfulParentKw.filter(pk => text.includes(pk));
 
-    if (meaningfulMatches.length > 0) {
-      const score = meaningfulMatches.length / parentKeywords.length;
+    if (matchedWords.length > 0) {
+      const score = matchedWords.length / meaningfulParentKw.length;
       if (score > bestScore) {
         bestScore = score;
         bestTask = task;
@@ -1082,7 +1084,7 @@ function addTask() {
   saveTasks();
 
   input.value = '';
-  dateInput.value = '';
+  dateInput.value = new Date().toISOString().split('T')[0]; // 今日の日付にリセット
 
   renderAll();
   input.focus();
